@@ -9,7 +9,7 @@ from click import BadParameter, UsageError
 
 from sgpt.__version__ import __version__
 from sgpt.integration import bash_integration, zsh_integration
-
+from sgpt.config import SHELL_GPT_CONFIG_PATH, SHELL_GPT_CONFIG_FOLDER
 
 def get_edited_prompt() -> str:
     """
@@ -93,3 +93,19 @@ def get_sgpt_version(*_args: Any) -> None:
     Displays the current installed version of ShellGPT
     """
     typer.echo(f"ShellGPT {__version__}")
+
+@option_callback
+def get_sgpt_config_path(*_args: Any) -> None:
+    """
+    Displays the ShellGPT config path, for convenience
+    """
+    typer.echo(SHELL_GPT_CONFIG_PATH)
+
+
+@option_callback
+def get_sgpt_config_folder(*_args: Any) -> None:
+    """
+    Displays the ShellGPT config folder, for convenience
+    """
+    typer.echo(SHELL_GPT_CONFIG_FOLDER)
+

@@ -18,6 +18,8 @@ from sgpt.role import DefaultRoles, SystemRole
 from sgpt.utils import (
     get_edited_prompt,
     get_sgpt_version,
+    get_sgpt_config_path,
+    get_sgpt_config_folder,
     install_shell_integration,
     run_command,
 )
@@ -93,6 +95,18 @@ def main(
         "--version",
         help="Show version.",
         callback=get_sgpt_version,
+    ),
+    config_path: bool = typer.Option(
+        False,
+        "--config-path",
+        help="Show path of config file.",
+        callback=get_sgpt_config_path,
+    ),
+    config_folder: bool = typer.Option(
+        False,
+        "--config-folder",
+        help="Show path of config folder.",
+        callback=get_sgpt_config_folder,
     ),
     chat: str = typer.Option(
         None,
