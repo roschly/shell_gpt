@@ -46,7 +46,7 @@ def main(
         help="Limits highest probable tokens (words).",
     ),
     md: bool = typer.Option(
-        cfg.get("PRETTIFY_MARKDOWN") == "true",
+        cfg.get("PRETTIFY_MARKDOWN"),
         help="Prettify markdown output.",
     ),
     shell: bool = typer.Option(
@@ -76,7 +76,7 @@ def main(
         rich_help_panel="Assistance Options",
     ),
     functions: bool = typer.Option(
-        cfg.get("OPENAI_USE_FUNCTIONS") == "true",
+        cfg.get("OPENAI_USE_FUNCTIONS"),
         help="Allow function calls.",
         rich_help_panel="Assistance Options",
     ),
@@ -239,7 +239,7 @@ def main(
         option = typer.prompt(
             text="[E]xecute, [D]escribe, [A]bort",
             type=Choice(("e", "d", "a", "y"), case_sensitive=False),
-            default="e" if cfg.get("DEFAULT_EXECUTE_SHELL_CMD") == "true" else "a",
+            default="e" if cfg.get("DEFAULT_EXECUTE_SHELL_CMD") else "a",
             show_choices=False,
             show_default=False,
         )

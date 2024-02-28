@@ -17,7 +17,7 @@ CHAT_CACHE_PATH = Path(gettempdir()) / "chat_cache"
 CACHE_PATH = Path(gettempdir()) / "cache"
 
 
-DEFAULT_CONFIG = {
+DEFAULT_CONFIG: dict[str, Union[str, bool, int]] = {
     # TODO: Refactor it to CHAT_STORAGE_PATH.
     "CHAT_CACHE_PATH": str(CHAT_CACHE_PATH),
     "CACHE_PATH": str(CACHE_PATH),

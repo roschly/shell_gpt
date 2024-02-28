@@ -11,7 +11,7 @@ from sgpt.__version__ import __version__
 from sgpt.integration import bash_integration, zsh_integration
 
 
-def cast_string(value: Union[str, int, bool]) -> Union[str, bool, int, Any]:
+def cast_string(value: Any) -> Union[str, bool, int, Any]:
     """Attempts to cast a string to either bool or int, returning anything that fails that (or isn't a string) as-is."""
     # return if not a string
     if not isinstance(value, str):

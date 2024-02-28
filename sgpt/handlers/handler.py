@@ -10,9 +10,9 @@ from ..role import DefaultRoles, SystemRole
 
 completion: Callable[..., Any] = lambda *args, **kwargs: None
 base_url = cfg.get("API_BASE_URL")
-use_litellm = cfg.get("USE_LITELLM") == "true"
+use_litellm = cfg.get("USE_LITELLM")
 additional_kwargs = {
-    "timeout": int(cfg.get("REQUEST_TIMEOUT")),
+    "timeout": cfg.get("REQUEST_TIMEOUT"),
     "api_key": cfg.get("OPENAI_API_KEY"),
     "base_url": None if base_url == "default" else base_url,
 }
@@ -38,7 +38,7 @@ class Handler:
 
         api_base_url = cfg.get("API_BASE_URL")
         self.base_url = None if api_base_url == "default" else api_base_url
-        self.timeout = int(cfg.get("REQUEST_TIMEOUT"))
+        self.timeout = cfg.get("REQUEST_TIMEOUT")
 
         self.markdown = "APPLY MARKDOWN" in self.role.role and markdown
         self.code_theme, self.color = cfg.get("CODE_THEME"), cfg.get("DEFAULT_COLOR")
@@ -76,7 +76,7 @@ class Handler:
         yield f"> @FunctionCall `{name}({joined_args})` \n\n"
 
         result = get_function(name)(**dict_args)
-        if cfg.get("SHOW_FUNCTIONS_OUTPUT") == "true":
+        if cfg.get("SHOW_FUNCTIONS_OUTPUT"):
             yield f"```text\n{result}\n```\n"
         messages.append({"role": "function", "content": result, "name": name})
 
@@ -134,7 +134,7 @@ class Handler:
         functions: Optional[List[Dict[str, str]]] = None,
         **kwargs: Any,
     ) -> str:
-        disable_stream = cfg.get("DISABLE_STREAMING") == "true"
+        disable_stream = cfg.get("DISABLE_STREAMING")
         messages = self.make_messages(prompt.strip())
         generator = self.get_completion(
             model=model,
