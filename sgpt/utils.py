@@ -2,13 +2,35 @@ import os
 import platform
 import shlex
 from tempfile import NamedTemporaryFile
-from typing import Any, Callable
+from typing import Any, Callable, Union
 
 import typer
 from click import BadParameter, UsageError
 
 from sgpt.__version__ import __version__
 from sgpt.integration import bash_integration, zsh_integration
+
+
+def cast_string(value: Union[str, int, bool]) -> Union[str, bool, int, Any]:
+    """Attempts to cast a string to either bool or int, returning anything that fails that (or isn't a string) as-is."""
+    # return if not a string
+    if not isinstance(value, str):
+        return value
+
+    # try cast to bool
+    if value.lower() == "true":
+        return True
+    elif value.lower() == "false":
+        return False
+
+    # try cast to int
+    try:
+        return int(value)
+    except ValueError:
+        pass
+
+    # just return un-casted value
+    return value
 
 
 def get_edited_prompt() -> str:

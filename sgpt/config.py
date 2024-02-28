@@ -2,9 +2,11 @@ import os
 from getpass import getpass
 from pathlib import Path
 from tempfile import gettempdir
-from typing import Any
+from typing import Any, Union
 
 from click import UsageError
+
+from .utils import cast_string
 
 CONFIG_FOLDER = os.path.expanduser("~/.config")
 SHELL_GPT_CONFIG_FOLDER = Path(CONFIG_FOLDER) / "shell_gpt"
@@ -14,27 +16,32 @@ FUNCTIONS_PATH = SHELL_GPT_CONFIG_FOLDER / "functions"
 CHAT_CACHE_PATH = Path(gettempdir()) / "chat_cache"
 CACHE_PATH = Path(gettempdir()) / "cache"
 
-# TODO: Refactor ENV variables with SGPT_ prefix.
+
 DEFAULT_CONFIG = {
     # TODO: Refactor it to CHAT_STORAGE_PATH.
-    "CHAT_CACHE_PATH": os.getenv("CHAT_CACHE_PATH", str(CHAT_CACHE_PATH)),
-    "CACHE_PATH": os.getenv("CACHE_PATH", str(CACHE_PATH)),
-    "CHAT_CACHE_LENGTH": int(os.getenv("CHAT_CACHE_LENGTH", "100")),
-    "CACHE_LENGTH": int(os.getenv("CHAT_CACHE_LENGTH", "100")),
-    "REQUEST_TIMEOUT": int(os.getenv("REQUEST_TIMEOUT", "60")),
-    "DEFAULT_MODEL": os.getenv("DEFAULT_MODEL", "gpt-4-1106-preview"),
-    "DEFAULT_COLOR": os.getenv("DEFAULT_COLOR", "magenta"),
-    "ROLE_STORAGE_PATH": os.getenv("ROLE_STORAGE_PATH", str(ROLE_STORAGE_PATH)),
-    "DEFAULT_EXECUTE_SHELL_CMD": os.getenv("DEFAULT_EXECUTE_SHELL_CMD", "false"),
-    "DISABLE_STREAMING": os.getenv("DISABLE_STREAMING", "false"),
-    "CODE_THEME": os.getenv("CODE_THEME", "dracula"),
-    "OPENAI_FUNCTIONS_PATH": os.getenv("OPENAI_FUNCTIONS_PATH", str(FUNCTIONS_PATH)),
-    "OPENAI_USE_FUNCTIONS": os.getenv("OPENAI_USE_FUNCTIONS", "true"),
-    "SHOW_FUNCTIONS_OUTPUT": os.getenv("SHOW_FUNCTIONS_OUTPUT", "false"),
-    "API_BASE_URL": os.getenv("API_BASE_URL", "default"),
-    "PRETTIFY_MARKDOWN": os.getenv("PRETTIFY_MARKDOWN", "true"),
-    "USE_LITELLM": os.getenv("USE_LITELLM", "false"),
+    "CHAT_CACHE_PATH": str(CHAT_CACHE_PATH),
+    "CACHE_PATH": str(CACHE_PATH),
+    "CHAT_CACHE_LENGTH": 100,
+    "CACHE_LENGTH": 100,
+    "REQUEST_TIMEOUT": 60,
+    "DEFAULT_MODEL": "gpt-4-1106-preview",
+    "DEFAULT_COLOR": "magenta",
+    "ROLE_STORAGE_PATH": str(ROLE_STORAGE_PATH),
+    "DEFAULT_EXECUTE_SHELL_CMD": False,
+    "DISABLE_STREAMING": False,
+    "CODE_THEME": "dracula",
+    "OPENAI_FUNCTIONS_PATH": str(FUNCTIONS_PATH),
+    "OPENAI_USE_FUNCTIONS": True,
+    "SHOW_FUNCTIONS_OUTPUT": False,
+    "API_BASE_URL": "default",
+    "PRETTIFY_MARKDOWN": True,
+    "USE_LITELLM": False,
     # New features might add their own config variables here.
+}
+# override configs from env vars if available, assuming SGPT_ prefix
+DEFAULT_CONFIG = {
+    key: cast_string(os.getenv(f"SGPT_{key}", value))
+    for key, value in DEFAULT_CONFIG.items()
 }
 
 
